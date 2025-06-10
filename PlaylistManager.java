@@ -1,4 +1,4 @@
-import java.util.*;
+/*import java.util.*;
 
 public class PlaylistManager {
 
@@ -7,8 +7,8 @@ public class PlaylistManager {
 
         PlayList newPlaylist = new PlayList(
                 UUID.randomUUID().toString(),
-                name,
-                new ArrayList<>()
+                name
+
         );
         user.addPlaylist(newPlaylist);
         return true;
@@ -54,4 +54,4 @@ public class PlaylistManager {
         }
         return null;
     }
-}
+}*/

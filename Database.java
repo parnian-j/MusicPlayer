@@ -46,7 +46,7 @@
         }
 
         public static void removeSong(String songId) {
-            Song s = getSongById(songId);
+            Song s = getSongById(Integer.parseInt(songId));
             if (s != null) {
                 songs.remove(s);
                 System.out.println("Song removed: " + s.getTitle());
@@ -55,9 +55,9 @@
             }
         }
 
-        public static Song getSongById(String id) {
+        public static Song getSongById(int id) {
             for (Song s : songs) {
-                if (s.getId().equals(id)) {
+                if (s.getId()==id) {
                     return s;
                 }
             }

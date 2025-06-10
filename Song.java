@@ -1,7 +1,12 @@
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Song {
-    private String id;
+    private int id;
+    private static int ID=0;
     private String title;
     private String artist;
     private String album;
@@ -11,14 +16,38 @@ public class Song {
     private String releaseDate;
     private int likeCount;
     private int playedCount;
+    private static final Map<Integer, Song> userMap = new HashMap<>();
+    private Set<String> likedByUsers = new HashSet<>();
 
-    public Song(String id,String title,String artist){
-        this.id = id;
+    public boolean like(String username) {
+        if (likedByUsers.contains(username)) {
+            return false; // قبلاً لایک کرده
+        }
+        likedByUsers.add(username);
+        this.likeCount++;
+        return true;
+    }
+    public boolean unlike(String username) {
+        if (!likedByUsers.contains(username)) {
+            return false;
+        }
+        likedByUsers.remove(username);
+        likeCount--;
+        return true;
+    }
+
+
+    public Song(String title,String artist){
+        ID++;
+        this.id = ID;
         this.title = title;
         this.artist = artist;
+        userMap.put(ID, this);
     }
-    public Song(String id, String title, String artist, String album, String genre, int duration, String path, int likeCount) {
-        this.id = id;
+
+    public Song(int id, String title, String artist, String album, String genre, int duration, String path, int likeCount) {
+        ID++;
+        this.id = ID;
         this.title = title;
         this.artist = artist;
         this.album = album;
@@ -26,13 +55,15 @@ public class Song {
         this.duration = duration;
         this.path = path;
         this.likeCount = likeCount;
+        userMap.put(ID, this);
     }
 
-    public String getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -99,9 +130,18 @@ public class Song {
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
     }
+    public static Song FindByID(int id) {
+        Song song = userMap.get(id);
+        return song;
+
+    }
 
     public boolean equals(Song song) {
-        return this.id.equals(song.id);
+        if (this.id == song.id){
+        return true;
+        }
+        return false;
+
     }
     public void addPlayedCount() {
         this.playedCount = this.playedCount + 1;

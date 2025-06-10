@@ -8,7 +8,10 @@ public class User {
     private boolean isAdmin;
     private List<PlayList> playlists;
     private List<Song> likedSongs;
+    //private transient List<PlayList> playlists;
+    //private transient List<Song> likedSongs;
     private LinkedHashSet<Song> MostPlayedSongs;
+    private final MusicPlayer root =  new MusicPlayer(this);;
 
     public User(String id, String username, String password, String email, boolean isAdmin) {
         this.id = id;
@@ -18,6 +21,11 @@ public class User {
         this.isAdmin = isAdmin;
         playlists = new ArrayList<>();
         likedSongs = new ArrayList<>();
+
+
+    }
+    public MusicPlayer getRoot() {
+        return root;
     }
 
 //getter setter
@@ -119,11 +127,12 @@ public class User {
     }
 
 
-    public void disLikeSong(Song song) {
+    public void unlikeSong(Song song) {
         if (likedSongs.contains(song)) {
             likedSongs.remove(song);
         }
     }
+
     public void addMostPlayedSong(Song song) {
         MostPlayedSongs.add(song);
     }

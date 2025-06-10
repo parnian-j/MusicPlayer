@@ -25,27 +25,43 @@ public class MusicPlayer {
     }
 
 
-    public void play() {
-        currentSong.addPlayedCount();
-
-        if (currentSong == null) {
-            currentSong = playList.poll();
-            currentPosition = 0;
+    public String play(Song song) {
+        if (song == null) {
+            return "choose song";
         }
-        if (currentSong != null) {
-            isPlaying = true;
+        song.addPlayedCount();
+        isPlaying = true;
+        currentSong = song;
+        currentPosition = 0;
+        return "playing " + currentSong.getTitle();
 
-            System.out.println("Playing: " + currentSong.getTitle() + " from " + currentPosition + "s");
-        } else {
-            System.out.println("Playlist is empty.");
+
+    }
+    public String play() {
+        if (currentSong == null ){
+            if (playList.isEmpty()){
+                return "choose song";
+            }
+            else {
+                currentSong = playList.getFirst();
+                 return this.play(currentSong);
+            }
+        }
+        else {
+            isPlaying = true;
+            currentPosition = 0;
+            return "playing " + currentSong.getTitle();
         }
     }
 
 
-    public void pause() {
+    public String pause() {
         if (isPlaying) {
             isPlaying = false;
-            System.out.println("Paused at " + currentPosition + "s");
+            return "Paused at playing " + currentSong.getTitle();
+        }
+        else{
+            return "No music playing.";
         }
     }
 
