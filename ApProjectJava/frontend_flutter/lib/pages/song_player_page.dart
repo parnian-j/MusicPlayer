@@ -1,115 +1,156 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import '../models/song.dart';
 
 class SongPlayerPage extends StatefulWidget {
-  final List<Song> playlist; // لیست آهنگ‌ها (مثلاً پلی‌لیست)
-  final int initialIndex; // آهنگ انتخاب‌شده
+  final List<Song> playlist;
+  final int initialIndex;
 
-  SongPlayerPage({required this.playlist, required this.initialIndex});
+  const SongPlayerPage({
+    Key? key,
+    required this.playlist,
+    required this.initialIndex, required String username,
+  }) : super(key: key);
 
   @override
   State<SongPlayerPage> createState() => _SongPlayerPageState();
 }
 
 class _SongPlayerPageState extends State<SongPlayerPage> {
+  late AudioPlayer _player;
   late int currentIndex;
-  bool isPlaying = true;
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
+    _player = AudioPlayer();
     currentIndex = widget.initialIndex;
+    _loadAndPlay(widget.playlist[currentIndex]);
   }
 
-  void _togglePlayPause() {
-    setState(() {
-      isPlaying = !isPlaying;
-    });
+  Future<void> _loadAndPlay(Song song) async {
+    setState(() => loading = true);
+    try {
+      await _player.setUrl(song.url);
+      await _player.play();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error playing song: $e")),
+      );
+    } finally {
+      setState(() => loading = false);
+    }
   }
 
   void _playNext() {
     if (currentIndex < widget.playlist.length - 1) {
-      setState(() {
-        currentIndex++;
-        isPlaying = true;
-      });
+      currentIndex++;
+      _loadAndPlay(widget.playlist[currentIndex]);
     }
   }
 
   void _playPrevious() {
     if (currentIndex > 0) {
-      setState(() {
-        currentIndex--;
-        isPlaying = true;
-      });
+      currentIndex--;
+      _loadAndPlay(widget.playlist[currentIndex]);
+    }
+  }
+
+  void _togglePlayPause() {
+    if (_player.playing) {
+      _player.pause();
+    } else {
+      _player.play();
     }
   }
 
   @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final currentSong = widget.playlist[currentIndex];
+    final song = widget.playlist[currentIndex];
 
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.white,
+        title: Text(song.title),
+        backgroundColor: Colors.cyanAccent,
+        foregroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // تصویر یا نمای آلبوم
+            // کاور آهنگ
             Container(
               height: 250,
               width: 250,
               decoration: BoxDecoration(
-                color: Colors.grey[900],
+                color: Colors.grey[800],
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(Icons.music_note, color: Colors.white38, size: 100),
+              child: const Icon(Icons.music_note, size: 100, color: Colors.white30),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 24),
 
-            // اطلاعات آهنگ
+            // عنوان آهنگ
             Text(
-              currentSong.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.cyanAccent),
+              song.title,
+              style: const TextStyle(
+                color: Colors.cyanAccent,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8),
-            Text(
-              currentSong.genre,
-              style: TextStyle(color: Colors.white70, fontSize: 16),
-            ),
-            SizedBox(height: 32),
+            const SizedBox(height: 8),
+            Text(song.genre, style: const TextStyle(color: Colors.white70)),
 
-            // کنترلر موزیک
+            const SizedBox(height: 32),
+
+            if (loading)
+              const CircularProgressIndicator(color: Colors.cyanAccent),
+
+            const SizedBox(height: 16),
+
+            // کنترل پخش
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: Icon(Icons.skip_previous, size: 36, color: Colors.white),
+                  icon: const Icon(Icons.skip_previous, color: Colors.white, size: 36),
                   onPressed: _playPrevious,
                 ),
-                SizedBox(width: 24),
-                IconButton(
-                  icon: Icon(
-                    isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-                    size: 64,
-                    color: Colors.cyanAccent,
-                  ),
-                  onPressed: _togglePlayPause,
+                const SizedBox(width: 24),
+                StreamBuilder<PlayerState>(
+                  stream: _player.playerStateStream,
+                  builder: (context, snapshot) {
+                    final playing = snapshot.data?.playing ?? false;
+                    return IconButton(
+                      icon: Icon(
+                        playing
+                            ? Icons.pause_circle_filled
+                            : Icons.play_circle_fill,
+                        size: 64,
+                        color: Colors.cyanAccent,
+                      ),
+                      onPressed: _togglePlayPause,
+                    );
+                  },
                 ),
-                SizedBox(width: 24),
+                const SizedBox(width: 24),
                 IconButton(
-                  icon: Icon(Icons.skip_next, size: 36, color: Colors.white),
+                  icon: const Icon(Icons.skip_next, color: Colors.white, size: 36),
                   onPressed: _playNext,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),

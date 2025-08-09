@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -11,12 +13,46 @@ class _SignupPageState extends State<SignupPage> {
   String email = '';
   String password = '';
 
-  void _submit() {
+  void _submit() async {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signup successful')),
-      );
-      Navigator.pushReplacementNamed(context, '/login');
+      try {
+        // اتصال به سرور جاوا
+        final socket = await Socket.connect('192.168.1.9', 12344);
+
+        // ساخت payload برای signup
+        final payload = {
+          'username': username,
+          'password': password,
+          'email': email,
+        };
+
+        final request = {
+          'action': 'signup',
+          'payloadJson': jsonEncode(payload),
+        };
+
+        // ارسال درخواست به سرور
+        socket.write(jsonEncode(request) + '\n');
+
+        // دریافت پاسخ از سرور
+        socket.listen((data) {
+          final response = utf8.decode(data).trim();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response)),
+          );
+
+          if (response.toLowerCase().contains("success")) {
+            Navigator.pushReplacementNamed(context, '/login');
+          }
+
+          socket.destroy(); // بستن اتصال
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error connecting to server: $e')),
+        );
+      }
     }
   }
 
@@ -67,7 +103,8 @@ class _SignupPageState extends State<SignupPage> {
                                 )),
                         ),
                         SizedBox(height: 8),
-                        Icon(Icons.music_note, color: Colors.cyanAccent, size: 40),
+                        Icon(Icons.music_note,
+                            color: Colors.cyanAccent, size: 40),
                         SizedBox(height: 20),
                         TextFormField(
                           style: TextStyle(color: Colors.white),
@@ -76,12 +113,10 @@ class _SignupPageState extends State<SignupPage> {
                             labelStyle: TextStyle(color: Colors.cyanAccent),
                             prefixIcon: Icon(Icons.person, color: Colors.blue),
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.indigo),
+                                borderSide: BorderSide(color: Colors.indigo),
                                 borderRadius: BorderRadius.circular(8)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.purple),
+                                borderSide: BorderSide(color: Colors.purple),
                                 borderRadius: BorderRadius.circular(8)),
                           ),
                           validator: (val) {
@@ -101,12 +136,10 @@ class _SignupPageState extends State<SignupPage> {
                             labelStyle: TextStyle(color: Colors.cyanAccent),
                             prefixIcon: Icon(Icons.email, color: Colors.blue),
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.indigo),
+                                borderSide: BorderSide(color: Colors.indigo),
                                 borderRadius: BorderRadius.circular(8)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.purple),
+                                borderSide: BorderSide(color: Colors.purple),
                                 borderRadius: BorderRadius.circular(8)),
                           ),
                           validator: (val) {
@@ -126,12 +159,10 @@ class _SignupPageState extends State<SignupPage> {
                             labelStyle: TextStyle(color: Colors.cyanAccent),
                             prefixIcon: Icon(Icons.lock, color: Colors.blue),
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.indigo),
+                                borderSide: BorderSide(color: Colors.indigo),
                                 borderRadius: BorderRadius.circular(8)),
                             focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                BorderSide(color: Colors.purple),
+                                borderSide: BorderSide(color: Colors.purple),
                                 borderRadius: BorderRadius.circular(8)),
                           ),
                           validator: (val) {
@@ -175,12 +206,14 @@ class _SignupPageState extends State<SignupPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account?", style: TextStyle(color: Colors.white)),
+                  Text("Already have an account?",
+                      style: TextStyle(color: Colors.white)),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacementNamed(context, '/login');
                     },
-                    child: Text("Login", style: TextStyle(color: Colors.cyanAccent)),
+                    child: Text("Login",
+                        style: TextStyle(color: Colors.cyanAccent)),
                   ),
                 ],
               ),

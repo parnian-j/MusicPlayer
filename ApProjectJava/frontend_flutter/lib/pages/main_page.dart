@@ -12,8 +12,8 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    HomePage(),
-    ExplorePage(),
+    HomePage(socketUrl: 'ws://192.168.1.9:12345',),
+    ExplorePage(socketUrl: 'ws://192.168.1.9:12345',),
     ProfilePage(),
   ];
 
