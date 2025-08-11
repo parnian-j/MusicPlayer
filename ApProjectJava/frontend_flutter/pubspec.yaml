@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^0.13.5
+  path_provider: ^2.0.14
+  local_auth: ^2.1.5
   shared_preferences: ^2.1.1
   web_socket_channel: ^2.4.0
   just_audio: ^0.9.31

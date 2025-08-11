@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:local_auth/local_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   String password = '';
 
   bool _isLoading = false;
+  final LocalAuthentication auth = LocalAuthentication();
 
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
@@ -22,11 +24,9 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      // تلاش برای اتصال به سرور
       Socket socket = await Socket.connect('192.168.1.9', 12344, timeout: Duration(seconds: 5));
       print('Connected to server');
 
-      // آماده سازی درخواست به صورت JSON
       final request = jsonEncode({
         "action": "login",
         "payloadJson": jsonEncode({
@@ -35,10 +35,8 @@ class _LoginPageState extends State<LoginPage> {
         }),
       });
 
-      // ارسال درخواست
-      socket.write(request + '\n');  // \n برای جدا کردن پیام‌ها
+      socket.write(request + '\n');
 
-      // گوش دادن به پاسخ سرور
       socket.listen((data) {
         final response = utf8.decode(data);
         print('Received response: $response');
@@ -47,7 +45,6 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Login successful')),
           );
-          // ناوبری به صفحه اصلی بعد از 500 میلی ثانیه
           Future.delayed(Duration(milliseconds: 500), () {
             Navigator.pushReplacementNamed(context, '/main');
           });
@@ -56,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text('Login failed: $response')),
           );
         }
-        socket.destroy();  // بستن اتصال
+        socket.destroy();
         setState(() {
           _isLoading = false;
         });
@@ -88,9 +85,45 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _authenticate() async {
+    try {
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      bool isAuthenticated = false;
+      if (canCheckBiometrics) {
+        isAuthenticated = await auth.authenticate(
+          localizedReason: 'Please authenticate to login',
+          options: AuthenticationOptions(
+            biometricOnly: true,
+            stickyAuth: true,
+          ),
+        );
+      }
+
+      if (isAuthenticated) {
+        // اینجا می‌تونی لاگین خودکار بزنی یا هر کاری که لازمه
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fingerprint authentication successful')),
+        );
+        // مثلا ناوبری مستقیم به صفحه اصلی
+        Future.delayed(Duration(milliseconds: 500), () {
+          Navigator.pushReplacementNamed(context, '/main');
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Fingerprint authentication failed')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error during authentication: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black87,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24),
@@ -206,6 +239,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: 12),
                         Text("OR", style: TextStyle(color: Colors.white70)),
+                        SizedBox(height: 12),
+                        IconButton(
+                          icon: Icon(Icons.fingerprint, size: 36, color: Colors.cyanAccent),
+                          onPressed: _authenticate,
+                          tooltip: 'Login with fingerprint',
+                        ),
                       ],
                     ),
                   ),

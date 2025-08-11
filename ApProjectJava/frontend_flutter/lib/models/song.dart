@@ -2,9 +2,9 @@ class Song {
   final String id;
   final String title;
   final String genre;
-  final String url; // لینک مستقیم فایل روی سرور
-  final int likes;
-  final int views;
+  final String url;
+  int likes;
+  int views;
   bool isDownloaded;
   final DateTime addedDate;
 
@@ -19,7 +19,6 @@ class Song {
     required this.addedDate,
   });
 
-  // تبدیل از JSON به Song
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
       id: json['id']?.toString() ?? '',
@@ -39,7 +38,6 @@ class Song {
     );
   }
 
-  // تبدیل Song به JSON (مثلاً برای ارسال به سرور)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -51,5 +49,13 @@ class Song {
       'isDownloaded': isDownloaded,
       'addedDate': addedDate.toIso8601String(),
     };
+  }
+
+  void incrementLikes() {
+    likes++;
+  }
+
+  void incrementViews() {
+    views++;
   }
 }
