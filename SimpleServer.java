@@ -1,3 +1,4 @@
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -7,6 +8,7 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,24 +17,28 @@ import java.util.*;
 
 public class SimpleServer {
 
-    private static final String HOST_IP = "192.168.1.9";
+    private static final String HOST_IP = "192.168.251.134";
     private static final int HTTP_PORT = 8080;
     private static final int TCP_PORT = 12344;
     private static final int WEBSOCKET_PORT = 12345;
     private static final String SONGS_FOLDER = "server_songs";
+    private static final String USERS_FILE = "user_profiles.json";
 
     private static Map<String, Integer> songLikes = new HashMap<>();
     private static Map<String, Integer> songViews = new HashMap<>();
+    private static Map<String, Map<String, Object>> userProfiles = new HashMap<>();
 
     private static Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception {
         loadSongData();
+        loadUserProfiles();
         startHttpFileServer();
         startTcpSocketServer();
         startWebSocketServer();
     }
 
+    // -------------------- SONG DATA --------------------
     private static void loadSongData() {
         File file = new File("song_data.json");
         if (file.exists()) {
@@ -61,6 +67,36 @@ public class SimpleServer {
         }
     }
 
+    // -------------------- USER DATA --------------------
+    private static void loadUserProfiles() {
+        File file = new File(USERS_FILE);
+        if (file.exists()) {
+            try (FileReader reader = new FileReader(file)) {
+                Map<String, Map<String, Object>> data = gson.fromJson(reader, Map.class);
+                if (data != null) {
+                    userProfiles.putAll(data);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // ذخیره پروفایل‌های کاربران به فایل
+    private static void saveUserProfiles() {
+        try (FileWriter writer = new FileWriter(USERS_FILE)) {
+            gson.toJson(userProfiles, writer);  // ذخیره داده‌ها به فایل
+            System.out.println("User profiles saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error saving user profiles: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    // -------------------- HTTP SERVER --------------------
     private static void startHttpFileServer() throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress(HTTP_PORT), 0);
         httpServer.createContext("/songs", new HttpHandler() {
@@ -103,6 +139,7 @@ public class SimpleServer {
         System.out.println("HTTP file server started on port " + HTTP_PORT + " serving folder '" + SONGS_FOLDER + "'");
     }
 
+    // -------------------- TCP SERVER --------------------
     private static void startTcpSocketServer() {
         new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(TCP_PORT)) {
@@ -118,6 +155,7 @@ public class SimpleServer {
         }).start();
     }
 
+
     private static void handleTcpClient(Socket socket) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
@@ -125,58 +163,363 @@ public class SimpleServer {
 
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                Request request = gson.fromJson(inputLine, Request.class);
-                String response;
+                // چاپ داده‌های دریافتی از فلاتر برای بررسی
+                System.out.println("Received data from Flutter: " + inputLine);
 
-                switch (request.getAction()) {
-                    case "login":
-                        LoginRequest loginRequest = gson.fromJson(request.getPayloadJson(), LoginRequest.class);
-                        response = UserManager.login(loginRequest.getUsername(), loginRequest.getPassword());
-                        break;
+                try {
+                    // بررسی اینکه آیا داده‌ها به درستی JSON هستند
+                    if (inputLine.startsWith("{")) {
+                        Request request = gson.fromJson(inputLine, Request.class);
+                        String response = "";
 
-                    case "signup":
-                        Map<String, String> signupPayload = gson.fromJson(request.getPayloadJson(), Map.class);
-                        String username = signupPayload.get("username");
-                        String password = signupPayload.get("password");
-                        String email = signupPayload.get("email");
-                        String registerResult = UserManager.registerUser(username, password, email);
+                        switch (request.getAction()) {
+                            case "delete_playlist": {
+                                // دریافت نام کاربری و id پلی‌لیست از payload
+                                String payloadJson = request.getPayloadJson();  // دریافت payload
+                                System.out.println("Received request to delete playlist: " + payloadJson);  // لاگ برای بررسی
 
-                        switch (registerResult) {
-                            case "success":
-                                response = "user registered successfully";
+                                // از payload، username و playlistId را استخراج می‌کنیم
+                                Map<String, Object> payloadMap = gson.fromJson(payloadJson, Map.class);
+                                String usernameProfile = (String) payloadMap.get("username");
+                                String playlistId = (String) payloadMap.get("playlistId");
+
+                                // لاگ برای بررسی اطلاعات دریافتی
+                                System.out.println("Deleting playlist for username: " + usernameProfile + " with playlistId: " + playlistId);
+
+                                // دریافت پروفایل کاربر از userProfiles
+                                Map<String, Object> userProfile = userProfiles.getOrDefault(usernameProfile, new HashMap<>());
+
+                                // اگر پروفایل پیدا شد، پلی‌لیست مورد نظر را حذف کنیم
+                                if (!userProfile.isEmpty()) {
+                                    List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+                                    // حذف پلی‌لیست با id مشخص شده
+                                    playlists.removeIf(playlist -> playlistId.equals(playlist.get("id")));
+                                    System.out.println("Playlist removed successfully for username: " + usernameProfile);
+
+                                    // ذخیره کردن تغییرات جدید در userProfiles
+                                    userProfiles.put(usernameProfile, userProfile);
+
+                                    // ارسال وضعیت موفقیت به کلاینت (فلاتر)
+                                    Map<String, Object> responseMap = new HashMap<>();
+                                    responseMap.put("status", "success");
+                                    response = gson.toJson(responseMap);
+                                } else {
+                                    // اگر پروفایل پیدا نشد، ارسال خطا به فلاتر
+                                    Map<String, Object> responseMap = new HashMap<>();
+                                    responseMap.put("status", "error");
+                                    response = gson.toJson(responseMap);
+                                }
+
+                                // ارسال پاسخ به کلاینت (فلاتر)
+                                outputStream.write((response + "\n").getBytes(StandardCharsets.UTF_8));
+                                outputStream.flush();
+
                                 break;
-                            case "name":
-                                response = "username already taken";
+                            }
+
+                            case "create_playlist": {
+                                // دریافت داده‌ها از درخواست و تبدیل payloadJson به نقشه
+                                String payloadJson = request.getPayloadJson();
+                                Map<String, String> playlistPayload = gson.fromJson(payloadJson, Map.class);
+                                String username = playlistPayload.get("username");
+                                String playlistName = playlistPayload.get("playlistName");
+
+                                // تولید شناسه جدید برای پلی‌لیست
+                                String playlistId = UUID.randomUUID().toString();
+
+                                if (!userProfiles.containsKey(username)) {
+                                    response = "User not found";
+                                } else {
+                                    Map<String, Object> userProfile = userProfiles.get(username);
+                                    List<Map<String, String>> playlists = (List<Map<String, String>>) userProfile.getOrDefault("playlists", new ArrayList<>());
+                                    playlists.add(Map.of("id", playlistId, "name", playlistName));  // اضافه کردن پلی‌لیست جدید
+
+                                    userProfile.put("playlists", playlists);  // ذخیره تغییرات در پروفایل
+                                    saveUserProfiles();  // ذخیره تغییرات به فایل
+
+                                    response = "Playlist created successfully";
+
+                                    // ارسال اطلاعات پلی‌لیست جدید به کلاینت
+                                    Map<String, Object> playlistData = Map.of(
+                                            "id", playlistId,
+                                            "name", playlistName
+                                    );
+                                    String jsonResponse = gson.toJson(playlistData);
+                                    outputStream.write((jsonResponse + "\n").getBytes(StandardCharsets.UTF_8));
+                                    outputStream.flush();
+                                }
                                 break;
-                            case "email":
-                                response = "email already taken";
+                            }
+
+
+
+
+                            case "login": {
+                                // پردازش درخواست لاگین
+                                LoginRequest loginRequest = gson.fromJson(request.getPayloadJson(), LoginRequest.class);
+                                response = handleLogin(loginRequest.getUsername(), loginRequest.getPassword());
                                 break;
+                            }
+
+                            case "signup": {
+                                // پردازش درخواست ثبت‌نام
+                                Map<String, String> signupPayload = gson.fromJson(request.getPayloadJson(), Map.class);
+                                response = handleSignup(signupPayload);
+                                break;
+                            }
+
+                            case "like_song": {
+                                // پردازش لایک آهنگ
+                                String songIdLike = request.getPayloadJson().replace("\"", "");
+                                songLikes.put(songIdLike, songLikes.getOrDefault(songIdLike, 0) + 1);
+                                saveSongData();  // ذخیره داده‌های آهنگ
+                                response = "success";
+                                break;
+                            }
+
+                            case "increment_view": {
+                                // پردازش بازدید از آهنگ
+                                String songIdView = request.getPayloadJson().replace("\"", "");
+                                songViews.put(songIdView, songViews.getOrDefault(songIdView, 0) + 1);
+                                saveSongData();  // ذخیره داده‌های آهنگ
+                                response = "success";
+                                break;
+                            }
+
+                            case "get_profile": {
+                                // دریافت نام کاربری از payload
+                                String payloadJson = request.getPayloadJson();  // دریافت payload
+                                System.out.println("Received request for user profile: " + payloadJson);  // لاگ برای بررسی
+
+                                // از payload، username را استخراج می‌کنیم
+                                Map<String, Object> payloadMap = gson.fromJson(payloadJson, Map.class);
+                                String usernameProfile = (String) payloadMap.get("username");
+
+                                // لاگ برای بررسی نام کاربری که به سرور ارسال شده است
+                                System.out.println("Requested profile for username: " + usernameProfile);
+
+                                // بررسی اینکه آیا پروفایل برای این کاربر موجود است
+                                Map<String, Object> userProfile = userProfiles.getOrDefault(usernameProfile, new HashMap<>());
+
+                                // استخراج پلی‌لیست‌ها و آهنگ‌ها از پروفایل
+                                // (بدون استفاده از Set و حذف تکراری)
+                                List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+                                List<Map<String, Object>> songs = (List<Map<String, Object>>) userProfile.get("songs");
+
+                                // قرار دادن پلی‌لیست‌ها و آهنگ‌ها در پروفایل
+                                userProfile.put("playlists", playlists);
+                                userProfile.put("songs", songs);
+
+                                // تبدیل پروفایل به JSON و ارسال به کلاینت
+                                response = gson.toJson(userProfile); // ارسال پروفایل به صورت JSON
+                                System.out.println("Response to be sent to client: " + response);  // لاگ برای بررسی پاسخ
+
+                                outputStream.write((response + "\n").getBytes(StandardCharsets.UTF_8));
+                                outputStream.flush();
+
+                                break;
+                            }
+
+
+
+
+
+                            case "update_theme": {
+                                // بروزرسانی تم کاربر
+                                Map<String, String> themePayload = gson.fromJson(request.getPayloadJson(), Map.class);
+                                String userTheme = themePayload.get("username");
+                                String theme = themePayload.get("theme");
+                                if (userProfiles.containsKey(userTheme)) {
+                                    userProfiles.get(userTheme).put("theme", theme);
+                                    saveUserProfiles();  // ذخیره تغییرات به فایل
+                                    response = "theme updated";
+                                } else {
+                                    response = "user not found";
+                                }
+                                break;
+                            }
+
+                            case "update_profile": {
+                                // بروزرسانی پروفایل کاربر
+                                Map<String, Object> updatePayload = gson.fromJson(request.getPayloadJson(), Map.class);
+                                String updateUser = (String) updatePayload.get("username");
+
+                                if (updateUser != null && userProfiles.containsKey(updateUser)) {
+                                    Map<String, Object> profile = userProfiles.get(updateUser);
+
+                                    if (updatePayload.containsKey("email")) {
+                                        profile.put("email", updatePayload.get("email"));
+                                    }
+                                    if (updatePayload.containsKey("password")) {
+                                        profile.put("password", updatePayload.get("password"));
+                                    }
+                                    if (updatePayload.containsKey("theme")) {
+                                        profile.put("theme", updatePayload.get("theme"));
+                                    }
+                                    if (updatePayload.containsKey("profileImage")) {
+                                        profile.put("profileImage", updatePayload.get("profileImage"));
+                                    }
+
+                                    saveUserProfiles();  // ذخیره تغییرات به فایل
+                                    response = "profile updated";
+                                } else {
+                                    response = "user not found";
+                                }
+                                break;
+                            }
+
+                            case "delete_account": {
+                                // حذف حساب کاربر
+                                String deleteUser = request.getPayloadJson().replace("\"", "");
+                                if (deleteUser != null && userProfiles.containsKey(deleteUser)) {
+                                    userProfiles.remove(deleteUser);
+                                    saveUserProfiles();  // ذخیره تغییرات به فایل
+                                    response = "success";
+                                } else {
+                                    response = "user not found";
+                                }
+                                break;
+                            }
+
+                            case "add_song_to_playlist": {
+                                String payloadJson = request.getPayloadJson();
+                                Map<String, String> payload = gson.fromJson(payloadJson, Map.class);
+                                String username = payload.get("username");
+                                String playlistName = payload.get("playlistName");
+                                String songId = payload.get("songId");
+
+                                if (!userProfiles.containsKey(username)) {
+                                    response = "User not found";
+                                } else {
+                                    Map<String, Object> userProfile = userProfiles.get(username);
+                                    List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+                                    for (Map<String, Object> playlist : playlists) {
+                                        if (playlist.get("name").equals(playlistName)) {
+                                            List<String> songs = (List<String>) playlist.get("songs");
+                                            if (!songs.contains(songId)) {
+                                                songs.add(songId);  // اضافه کردن آهنگ به پلی‌لیست
+                                                saveUserProfiles();  // ذخیره تغییرات به فایل
+                                                response = "Song added to playlist successfully";
+                                            } else {
+                                                response = "Song already in playlist";
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+
+                            case "add_song_to_profile": {
+                                // دریافت اطلاعات آهنگ و نام کاربری از payload
+                                String payloadJson = request.getPayloadJson();  // دریافت payload
+                                System.out.println("Received request to add song to profile: " + payloadJson);  // لاگ برای بررسی
+
+                                // از payload، username و songId را استخراج می‌کنیم
+                                Map<String, Object> payloadMap = gson.fromJson(payloadJson, Map.class);
+                                String usernameProfile = (String) payloadMap.get("username");
+                                String songId = (String) payloadMap.get("songId");
+
+                                // لاگ برای بررسی اطلاعات دریافتی
+                                System.out.println("Adding song with id: " + songId + " to profile for username: " + usernameProfile);
+
+                                // دریافت پروفایل کاربر از userProfiles
+                                Map<String, Object> userProfile = userProfiles.getOrDefault(usernameProfile, new HashMap<>());
+
+                                // اگر پروفایل کاربر موجود است
+                                if (!userProfile.isEmpty()) {
+                                    // دریافت آهنگ‌های موجود در پروفایل
+                                    List<Map<String, Object>> songs = (List<Map<String, Object>>) userProfile.get("songs");
+
+                                    // اگر آهنگ‌ها موجود نیستند، یک لیست خالی ایجاد می‌کنیم
+                                    if (songs == null) {
+                                        songs = new ArrayList<>();
+                                    }
+
+                                    // افزودن آهنگ جدید به پروفایل
+                                    Map<String, Object> newSong = new HashMap<>();
+                                    newSong.put("id", songId);  // افزودن آهنگ جدید با id مشخص
+
+                                    // افزودن آهنگ جدید به لیست آهنگ‌ها
+                                    songs.add(newSong);
+                                    userProfile.put("songs", songs);  // ذخیره تغییرات در پروفایل
+
+                                    // ذخیره‌سازی اطلاعات به روز شده کاربر
+                                    userProfiles.put(usernameProfile, userProfile);
+                                    System.out.println("Song added successfully to profile for username: " + usernameProfile);
+
+                                    // ارسال پاسخ موفقیت به فلاتر
+                                    Map<String, Object> responseMap = new HashMap<>();
+                                    responseMap.put("status", "success");
+                                    response = gson.toJson(responseMap);
+                                } else {
+                                    // اگر پروفایل کاربر یافت نشد
+                                    Map<String, Object> responseMap = new HashMap<>();
+                                    responseMap.put("status", "error");
+                                    response = gson.toJson(responseMap);
+                                }
+
+                                // ارسال پاسخ به فلاتر
+                                outputStream.write((response + "\n").getBytes(StandardCharsets.UTF_8));
+                                outputStream.flush();
+
+                                break;
+                            }
+
+
+
+                            case "remove_song_from_playlist": {
+                                String payloadJson = request.getPayloadJson();
+                                Map<String, String> payload = gson.fromJson(payloadJson, Map.class);
+                                String username = payload.get("username");
+                                String playlistName = payload.get("playlistName");
+                                String songId = payload.get("songId");
+
+                                if (!userProfiles.containsKey(username)) {
+                                    response = "User not found";
+                                } else {
+                                    Map<String, Object> userProfile = userProfiles.get(username);
+                                    List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+                                    for (Map<String, Object> playlist : playlists) {
+                                        if (playlist.get("name").equals(playlistName)) {
+                                            List<String> songs = (List<String>) playlist.get("songs");
+                                            if (songs.contains(songId)) {
+                                                songs.remove(songId);  // حذف آهنگ از پلی‌لیست
+                                                saveUserProfiles();  // ذخیره تغییرات به فایل
+                                                response = "Song removed from playlist successfully";
+                                            } else {
+                                                response = "Song not found in playlist";
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+
+
+
                             default:
-                                response = "unknown error";
-                                break;
+                                response = "Invalid action";
                         }
-                        break;
 
-                    case "like_song":
-                        String songIdLike = request.getPayloadJson().replace("\"", "");
-                        songLikes.put(songIdLike, songLikes.getOrDefault(songIdLike, 0) + 1);
-                        saveSongData();
-                        response = "success";
-                        break;
-
-                    case "increment_view":
-                        String songIdView = request.getPayloadJson().replace("\"", "");
-                        songViews.put(songIdView, songViews.getOrDefault(songIdView, 0) + 1);
-                        saveSongData();
-                        response = "success";
-                        break;
-
-                    default:
-                        response = "Invalid action";
+                        // ارسال پاسخ به کلاینت
+                        outputStream.write((response + "\n").getBytes(StandardCharsets.UTF_8));
+                        outputStream.flush();
+                    } else {
+                        // اگر داده‌ها به درستی JSON نباشند، خطا بدهید
+                        System.out.println("Invalid JSON format received: " + inputLine);
+                        outputStream.write("Invalid JSON format\n".getBytes(StandardCharsets.UTF_8));
+                        outputStream.flush();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error processing JSON: " + e.getMessage());
+                    outputStream.write("Error processing JSON\n".getBytes(StandardCharsets.UTF_8));
+                    outputStream.flush();
                 }
-
-                outputStream.write((response + "\n").getBytes(StandardCharsets.UTF_8));
-                outputStream.flush();
             }
 
             socket.close();
@@ -185,6 +528,168 @@ public class SimpleServer {
         }
     }
 
+
+
+
+
+    // -------------------- LOGIN / SIGNUP --------------------
+    private static String handleLogin(String username, String password) {
+        if (!userProfiles.containsKey(username)) {
+            return "user not found";
+        }
+        String savedPassword = (String) userProfiles.get(username).get("password");
+        if (password != null && password.equals(savedPassword)) {
+            // مطابق با شرط کلاینت شما: contains('welcome')
+            return "Welcome, " + username;
+        } else {
+            return "wrong password";
+        }
+    }
+    private static String handleCreatePlaylist(String username, String playlistName) {
+        if (!userProfiles.containsKey(username)) {
+            return "user not found";
+        }
+
+        Map<String, Object> userProfile = userProfiles.get(username);
+        List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+        // چک کردن اینکه آیا پلی‌لیست با این نام وجود دارد یا خیر
+        for (Map<String, Object> playlist : playlists) {
+            if (playlist.get("playlistName").equals(playlistName)) {
+                return "playlist already exists";  // اگر پلی‌لیست قبلاً وجود داشته باشد
+            }
+        }
+
+        // ایجاد پلی‌لیست جدید
+        Map<String, Object> newPlaylist = new HashMap<>();
+        newPlaylist.put("playlistName", playlistName);
+        newPlaylist.put("songs", new ArrayList<>());  // آهنگ‌های این پلی‌لیست
+
+        // افزودن پلی‌لیست به لیست پلی‌لیست‌ها
+        playlists.add(newPlaylist);
+
+        // ذخیره تغییرات به فایل
+        saveUserProfiles();
+
+        return "playlist created successfully";
+    }
+
+
+    private static String handleAddSongToPlaylist(String username, String playlistName, String songId) {
+        if (!userProfiles.containsKey(username)) {
+            return "user not found";
+        }
+
+        Map<String, Object> userProfile = userProfiles.get(username);
+        List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+        // یافتن پلی‌لیست مورد نظر
+        for (Map<String, Object> playlist : playlists) {
+            if (playlist.get("playlistName").equals(playlistName)) {
+                List<String> songs = (List<String>) playlist.get("songs");
+                // اضافه کردن آهنگ به پلی‌لیست
+                if (!songs.contains(songId)) {
+                    songs.add(songId);
+                    saveUserProfiles();  // ذخیره تغییرات به فایل
+                    return "Song added to playlist successfully";
+                } else {
+                    return "Song already in playlist";  // اگر آهنگ قبلاً در پلی‌لیست موجود باشد
+                }
+            }
+        }
+
+        return "Playlist not found";  // اگر پلی‌لیست پیدا نشد
+    }
+
+
+    private static String handleRemoveSongFromPlaylist(String username, String playlistName, String songId) {
+        if (!userProfiles.containsKey(username)) {
+            return "user not found";
+        }
+
+        Map<String, Object> userProfile = userProfiles.get(username);
+        List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+        // یافتن پلی‌لیست مورد نظر
+        for (Map<String, Object> playlist : playlists) {
+            if (playlist.get("playlistName").equals(playlistName)) {
+                List<String> songs = (List<String>) playlist.get("songs");
+                if (songs.contains(songId)) {
+                    songs.remove(songId);  // حذف آهنگ از پلی‌لیست
+                    saveUserProfiles();  // ذخیره تغییرات به فایل
+                    return "Song removed from playlist successfully";
+                } else {
+                    return "Song not found in playlist";  // اگر آهنگ در پلی‌لیست نبود
+                }
+            }
+        }
+
+        return "Playlist not found";  // اگر پلی‌لیست پیدا نشد
+    }
+
+
+    private static String handleGetPlaylists(String username) {
+        if (!userProfiles.containsKey(username)) {
+            return "user not found";
+        }
+
+        Map<String, Object> userProfile = userProfiles.get(username);
+        List<Map<String, Object>> playlists = (List<Map<String, Object>>) userProfile.get("playlists");
+
+        // تبدیل پلی‌لیست‌ها به JSON
+        return gson.toJson(playlists);
+    }
+
+
+
+    private static String handleSignup(Map<String, String> payload) {
+        String username = payload.get("username");
+        String password = payload.get("password");
+        String email = payload.get("email");
+
+        System.out.println("Received signup data: " + payload);
+
+        if (username == null || username.trim().isEmpty()) return "invalid username";
+        if (password == null || password.trim().isEmpty()) return "invalid password";
+        if (email == null || email.trim().isEmpty()) return "invalid email";
+
+        // چک کردن اینکه آیا نام کاربری قبلاً وجود دارد
+        if (userProfiles.containsKey(username)) return "username already taken";
+
+        // بررسی ایمیل
+        for (Map<String, Object> profile : userProfiles.values()) {
+            Object em = profile.get("email");
+            if (em != null && email.equals(em.toString())) return "email already taken";
+        }
+
+        // ایجاد پروفایل جدید و اضافه کردن آن به userProfiles
+        Map<String, Object> newProfile = new HashMap<>();
+        newProfile.put("email", email);
+        newProfile.put("password", password);
+        newProfile.put("theme", "light");
+        newProfile.put("profileImage", null);
+
+        // افزودن لیست‌های اولیه
+        List<Map<String, Object>> playlists = new ArrayList<>();
+        newProfile.put("playlists", playlists);
+
+        List<String> likedSongs = new ArrayList<>();
+        newProfile.put("likedSongs", likedSongs);
+
+        // افزودن پروفایل جدید به userProfiles
+        userProfiles.put(username, newProfile);
+
+        // چاپ userProfiles پس از افزودن پروفایل جدید برای بررسی
+        System.out.println("User profiles after adding new user: " + gson.toJson(userProfiles));
+
+        // ذخیره پروفایل‌ها در فایل
+        saveUserProfiles();
+
+        return "user registered successfully";
+    }
+
+
+    // -------------------- WEBSOCKET SERVER --------------------
     private static void startWebSocketServer() {
         WebSocketServer wsServer = new WebSocketServer(new InetSocketAddress(WEBSOCKET_PORT)) {
             @Override
@@ -199,7 +704,6 @@ public class SimpleServer {
 
             @Override
             public void onMessage(WebSocket conn, String message) {
-                System.out.println("Received from WebSocket client: " + message);
                 try {
                     Request request = gson.fromJson(message, Request.class);
                     String response;
@@ -221,7 +725,7 @@ public class SimpleServer {
                                 songData.put("title", Character.toUpperCase(title.charAt(0)) + title.substring(1));
                                 songData.put("genre", "Unknown");
 
-                                // آدرس برای Emulator (بجای localhost)
+                                // برای Emulator اندروید
                                 songData.put("url", "http://10.0.2.2:" + HTTP_PORT + "/songs/" + fileName);
 
                                 songData.put("likes", songLikes.getOrDefault(id, 0));
@@ -255,29 +759,19 @@ public class SimpleServer {
         wsServer.start();
     }
 
+    // -------------------- DATA MODELS --------------------
     static class Request {
         private String action;
         private String payloadJson;
 
-        public String getAction() {
-            return action;
-        }
-
-        public String getPayloadJson() {
-            return payloadJson;
-        }
+        public String getAction() { return action; }
+        public String getPayloadJson() { return payloadJson; }
     }
 
     static class LoginRequest {
         private String username;
         private String password;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
+        public String getUsername() { return username; }
+        public String getPassword() { return password; }
     }
 }
