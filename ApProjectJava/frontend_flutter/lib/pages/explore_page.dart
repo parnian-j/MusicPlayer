@@ -102,7 +102,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     id: 'popular_$i',
                     name: popularSongs[i].title,
                     songs: [popularSongs[i]],
-                    coverImageUrl: 'assets/images/popular.jpg',
+                    coverImageUrl: 'assets/images/popular.png',
                   ),
                   isSmall: true,
                   onTap: () {
@@ -132,7 +132,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     id: 'mostviewed_$i',
                     name: mostViewedSongs[i].title,
                     songs: [mostViewedSongs[i]],
-                    coverImageUrl: 'assets/images/viewed.jpg',
+                    coverImageUrl: 'assets/images/view.png',
                   ),
                   isSmall: true,
                   onTap: () {

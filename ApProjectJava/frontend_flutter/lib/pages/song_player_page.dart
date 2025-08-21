@@ -57,7 +57,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
 
   Future<void> _sendTcpCommand(String action, String payload) async {
     try {
-      Socket socket = await Socket.connect("10.0.2.2", 12344);
+      Socket socket = await Socket.connect("192.168.251.134", 12344);
       final req = {
         "action": action,
         "payloadJson": jsonEncode(payload),

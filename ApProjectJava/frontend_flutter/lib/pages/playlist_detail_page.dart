@@ -1,5 +1,7 @@
 // lib/pages/playlist_detail_page.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // ⬅️ برای Clipboard
 import '../models/playlist.dart';
 import '../models/song.dart';
 import 'song_player_page.dart';
@@ -27,25 +29,62 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
     playlist = widget.playlist;
   }
 
+  // ⬇️ دکمه‌ی Share: کپی JSON پلی‌لیست به کلیپ‌بورد
+  Future<void> _copyPlaylistJson() async {
+    // اگر مدل‌ها toJson دارن، ازشون استفاده کن:
+    Map<String, dynamic> plMap = {
+      'id': playlist.id,
+      'name': playlist.name,
+      'coverImageUrl': playlist.coverImageUrl,
+      'songs': playlist.songs.map((s) {
+        // اگر Song.toJson داری، این خط ساده‌تر میشه: return s.toJson();
+        return {
+          'id': s.id,
+          'title': s.title,
+          'genre': s.genre,
+          'likes': s.likes,
+          'views': s.views,
+          'url': s.url,
+          'addedDate': s.addedDate.toIso8601String(),
+        };
+      }).toList(),
+    };
+
+    // خوش‌فرم (pretty) برای کپی
+    final jsonStr = const JsonEncoder.withIndent('  ').convert(plMap);
+
+    await Clipboard.setData(ClipboardData(text: jsonStr));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Playlist JSON copied to clipboard')),
+    );
+  }
+
   Future<void> _addSongToPlaylist() async {
     final Song? picked = await showDialog<Song>(
       context: context,
       builder: (_) {
-        final available = widget.allSongs.where((s) => !playlist.songs.any((ps) => ps.id == s.id)).toList();
+        final available = widget.allSongs
+            .where((s) => !playlist.songs.any((ps) => ps.id == s.id))
+            .toList();
+
         return SimpleDialog(
           backgroundColor: Colors.grey[900],
-          title: Text('Add song to playlist', style: TextStyle(color: Colors.cyanAccent)),
+          title: const Text('Add song to playlist',
+              style: TextStyle(color: Colors.cyanAccent)),
           children: available.isEmpty
               ? [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Text('No available songs to add', style: TextStyle(color: Colors.white70)),
+              child: Text('No available songs to add',
+                  style: TextStyle(color: Colors.white70)),
             )
           ]
               : available
               .map((s) => SimpleDialogOption(
             onPressed: () => Navigator.pop(context, s),
-            child: Text(s.title, style: TextStyle(color: Colors.white)),
+            child: Text(s.title,
+                style: const TextStyle(color: Colors.white)),
           ))
               .toList(),
         );
@@ -70,12 +109,17 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Text(playlist.name, style: TextStyle(color: Colors.black),),
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: Text(playlist.name, style: const TextStyle(color: Colors.black)),
         backgroundColor: Colors.cyanAccent,
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: Colors.black),
+            icon: const Icon(Icons.share, color: Colors.black),
+            tooltip: 'Share (copy JSON)',
+            onPressed: _copyPlaylistJson, // ⬅️ اینجا
+          ),
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.black),
             onPressed: _addSongToPlaylist,
             tooltip: 'Add Song',
           ),
@@ -83,18 +127,22 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
       ),
       body: playlist.songs.isEmpty
           ? Center(
-        child: Text('No songs in this playlist', style: TextStyle(color: Colors.grey[400])),
+        child: Text('No songs in this playlist',
+            style: TextStyle(color: Colors.grey[400])),
       )
           : ListView.builder(
         itemCount: playlist.songs.length,
         itemBuilder: (context, idx) {
           final song = playlist.songs[idx];
           return ListTile(
-            leading: Icon(Icons.music_note, color: Colors.cyanAccent),
-            title: Text(song.title, style: TextStyle(color: Colors.white)),
-            subtitle: Text('Genre: ${song.genre}', style: TextStyle(color: Colors.grey[400])),
+            leading:
+            const Icon(Icons.music_note, color: Colors.cyanAccent),
+            title: Text(song.title,
+                style: const TextStyle(color: Colors.white)),
+            subtitle: Text('Genre: ${song.genre}',
+                style: TextStyle(color: Colors.grey[400])),
             trailing: IconButton(
-              icon: Icon(Icons.delete, color: Colors.redAccent),
+              icon: const Icon(Icons.delete, color: Colors.redAccent),
               onPressed: () => _removeSong(song),
             ),
             onTap: () {
@@ -115,3 +163,4 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
     );
   }
 }
+

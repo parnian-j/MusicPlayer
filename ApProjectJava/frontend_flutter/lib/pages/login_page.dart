@@ -1,7 +1,10 @@
+// ==================== LOGIN PAGE ====================
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:local_auth/local_auth.dart';
+
+import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      Socket socket = await Socket.connect('192.168.1.9', 12344, timeout: Duration(seconds: 5));
+      Socket socket = await Socket.connect('172.20.194.126', 12344, timeout: Duration(seconds: 5));
       print('Connected to server');
 
       final request = jsonEncode({
@@ -46,7 +49,15 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text('Login successful')),
           );
           Future.delayed(Duration(milliseconds: 500), () {
-            Navigator.pushReplacementNamed(context, '/main');
+            // --------- ارسال اطلاعات به MainPage ----------
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainPage(
+                  username: username.trim(), isDarkMode: true,
+                ),
+              ),
+            );
           });
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -100,13 +111,18 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       if (isAuthenticated) {
-        // اینجا می‌تونی لاگین خودکار بزنی یا هر کاری که لازمه
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Fingerprint authentication successful')),
         );
-        // مثلا ناوبری مستقیم به صفحه اصلی
         Future.delayed(Duration(milliseconds: 500), () {
-          Navigator.pushReplacementNamed(context, '/main');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MainPage(
+                username: username.trim(), isDarkMode: true,
+              ),
+            ),
+          );
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               ClipOval(
                 child: Image.asset(
-                  'assets/images/meow.png',
+                  'assets/images/meow.PNG',
                   width: 180,
                   height: 180,
                   fit: BoxFit.cover,

@@ -2,7 +2,7 @@
 import 'song.dart';
 
 class Playlist {
-  final String id;
+  late final String id;
   final String name;
   List<Song> songs;
   final String coverImageUrl;
