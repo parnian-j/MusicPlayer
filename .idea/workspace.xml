@@ -5,127 +5,159 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6c4a4829-be7e-4d25-b0f7-9308b38065c7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/checksums/checksums.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/dependencies-accessors/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.10/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/config.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib2.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Java-WebSocket-1.6.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gson-2.10.1.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/.metadata" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/Java-WebSocket-1.6.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/analysis_options.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/images/default_profile.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/images/meow.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/images/popular.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/images/view.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/screenshots/explore.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/screenshots/home.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/screenshots/login.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/screenshots/profile.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/assets/screenshots/signup.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/gson-2.10.1.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Flutter/Debug.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Flutter/Release.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/AppDelegate.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-20x20@3x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-29x29@3x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@3x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@1x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/LaunchImage.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/LaunchImage.imageset/LaunchImage@3x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Assets.xcassets/LaunchImage.imageset/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Base.lproj/LaunchScreen.storyboard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Base.lproj/Main.storyboard" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/Runner/Runner-Bridging-Header.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/ios/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/Java-WebSocket-1.6.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/gson-2.10.1.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/main.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/models/playlist.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/models/song.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/Signup_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/explore_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/genre_songs_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/home_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/login_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/main_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/playlist_detail_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/profile_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/pages/song_player_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/services/socket_services.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/slf4j-api-1.7.32.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/slf4j-simple-1.7.32.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/lib/widgets/playlist_card.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/flutter/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/runner/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/runner/main.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/runner/my_application.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/linux/runner/my_application.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Flutter/Flutter-Debug.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Flutter/Flutter-Release.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/AppDelegate.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Base.lproj/MainMenu.xib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Configs/Debug.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Configs/Release.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Configs/Warnings.xcconfig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/DebugProfile.entitlements" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Info.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/MainFlutterWindow.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/Runner/Release.entitlements" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/macos/RunnerTests/RunnerTests.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/pubspec.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/pubspec.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/slf4j-api-1.7.32.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/slf4j-simple-1.7.32.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/song_data.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/user_profiles.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/favicon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/icons/Icon-192.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/icons/Icon-512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/icons/Icon-maskable-192.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/icons/Icon-maskable-512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/web/manifest.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/flutter/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/flutter/generated_plugins.cmake" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/Runner.rc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/flutter_window.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/flutter_window.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/main.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/resource.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/resources/app_icon.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/runner.exe.manifest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/utils.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/utils.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/win32_window.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/rega/windows/runner/win32_window.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/slf4j-api-1.7.32.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/slf4j-simple-1.7.32.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata" beforeDir="false" afterPath="$PROJECT_DIR$/.metadata" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/LoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MusicPlayer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlayList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PlaylistManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AdminCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/AdminCLI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Request.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SimpleClient.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SimpleServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/SimpleServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Song.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SongManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/UserManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/kotlin/com/example/my_project/MainActivity.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/android/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Flutter/AppFrameworkInfo.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/Signup_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/Signup_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/explore_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/explore_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/pages/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/home_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/login_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/main_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/main_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/playlist_detail_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/playlist_detail_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/profile_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/profile_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/pages/song_player_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/song_player_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/linux/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linux/runner/my_application.cc" beforeDir="false" afterPath="$PROJECT_DIR$/linux/runner/my_application.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/macos/Runner/Configs/AppInfo.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/macos/Runner/Configs/AppInfo.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/musicplayer" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/musicplayer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/libraries/lib.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/libraries/lib2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/Database.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/MusicPlayer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/PlayList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/PlaylistManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/Request.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleServer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleServer$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleServer$LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleServer$Request.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SimpleServer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/Song.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/SongManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/UserManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/lib/Java-WebSocket-1.6.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/lib/gson-2.10.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/lib/slf4j-api-1.7.32.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/lib/slf4j-simple-1.7.32.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/musicplayer.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/server_songs/Bache Mahal..mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/server_songs/Tabstoon_Kotahe.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/server_songs/Tehran Mibinamet.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/song_data.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/musicplayer/user_profiles.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_songs/Bache Mahal..mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_songs/Tabstoon_Kotahe.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server_songs/Tehran Mibinamet.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/widget_test.dart" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/user_profiles.json" beforeDir="false" afterPath="$PROJECT_DIR$/user_profiles.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/web/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/web/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/windows/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/windows/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/Runner.rc" beforeDir="false" afterPath="$PROJECT_DIR$/windows/runner/Runner.rc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/windows/runner/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/windows/runner/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -146,24 +178,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Flutter.main.dart.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/mahdi/Desktop/Meowbeat",
-    "settings.editor.selected.configurable": "AndroidSdkUpdater",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.SimpleServer.executor&quot;: &quot;Run&quot;,
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/mahdi/Desktop/Meowbeat/slf4j-simple-1.7.32.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -172,7 +222,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1755725142307</updated>
+      <workItem from="1756238273669" duration="2719000" />
+      <workItem from="1756242848032" duration="2157000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

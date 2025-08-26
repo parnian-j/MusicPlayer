@@ -27,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   late WebSocketChannel channel;
+  late Stream<dynamic> _wsStream;
   List<Song> allSongs = [];
   List<Song> serverSongs = [];
   List<Playlist> playlists = [];
@@ -39,6 +40,7 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     channel = WebSocketChannel.connect(Uri.parse(widget.socketUrl));
+    _wsStream = channel.stream.asBroadcastStream();
     _loadAllSongs();
     unawaited(_loadPlaylists());
     unawaited(_refreshPlaylists());
@@ -63,6 +65,7 @@ class HomePageState extends State<HomePage> {
       channel.sink.close();
     }
     channel = WebSocketChannel.connect(Uri.parse(widget.socketUrl));
+    _wsStream = channel.stream.asBroadcastStream();
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = 'allSongs_${widget.username}';
@@ -137,7 +140,7 @@ class HomePageState extends State<HomePage> {
     final request = {"action": "get_explore_songs", "payloadJson": "{}"};
     channel.sink.add(jsonEncode(request));
 
-    channel.stream.listen(
+    _wsStream.listen(
           (data) {
         try {
           final decoded = jsonDecode(data);
@@ -247,7 +250,7 @@ class HomePageState extends State<HomePage> {
           'payloadJson': jsonEncode(payload),
         };
 
-        final socket = await Socket.connect('', 12344);
+        final socket = await Socket.connect('192.168.219.134', 12344);
         socket.write(jsonEncode(request) + '\n');
 
         String buffer = '';
@@ -283,6 +286,7 @@ class HomePageState extends State<HomePage> {
       channel.sink.add(jsonEncode({"ping": "ok"}));
     } catch (_) {
       channel = WebSocketChannel.connect(Uri.parse(widget.socketUrl));
+      _wsStream = channel.stream.asBroadcastStream();
     }
   }
 
@@ -291,7 +295,7 @@ class HomePageState extends State<HomePage> {
 
     final req = {"action": "get_explore_songs", "payloadJson": "{}"};
     channel.sink.add(jsonEncode(req));
-    final raw = await channel.stream.firstWhere((data) {
+    final raw = await _wsStream.firstWhere((data) {
       try {
         final d = jsonDecode(data);
         return d is List;
@@ -1062,3 +1066,4 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
+

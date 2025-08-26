@@ -17,10 +17,8 @@ public class AdminCLI {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    // userProfiles: Map<username, Map<...profile...>>
     private Map<String, Map<String, Object>> userProfiles = new LinkedHashMap<>();
 
-    // songLikes / songViews: Map<songId, Integer>
     private Map<String, Integer> songLikes = new HashMap<>();
     private Map<String, Integer> songViews = new HashMap<>();
 
@@ -34,7 +32,6 @@ public class AdminCLI {
         System.out.println("\nخروج از برنامه. تغییرات ذخیره شد.");
     }
 
-    // ---------------------- Load / Save ----------------------
     private void loadAll() {
         loadUserProfiles();
         loadSongData();
@@ -53,7 +50,8 @@ public class AdminCLI {
             return;
         }
         try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
-            Type t = new TypeToken<LinkedHashMap<String, LinkedHashMap<String, Object>>>() {}.getType();
+            Type t = new TypeToken<LinkedHashMap<String, LinkedHashMap<String, Object>>>() {
+            }.getType();
             Map<String, Map<String, Object>> data = gson.fromJson(r, t);
             if (data != null) userProfiles = new LinkedHashMap<>(data);
         } catch (Exception e) {
@@ -80,8 +78,8 @@ public class AdminCLI {
             return;
         }
         try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
-            // ساختار: {"likes": {"id": num}, "views": {"id": num}}
-            Type t = new TypeToken<Map<String, Map<String, Double>>>() {}.getType();
+            Type t = new TypeToken<Map<String, Map<String, Double>>>() {
+            }.getType();
             Map<String, Map<String, Double>> data = gson.fromJson(r, t);
             songLikes = new HashMap<>();
             songViews = new HashMap<>();
@@ -110,7 +108,6 @@ public class AdminCLI {
         }
     }
 
-    // ---------------------- Menus ----------------------
     private void mainMenu() {
         while (true) {
             System.out.println("\n===== (AdminCLI) =====");
@@ -123,18 +120,29 @@ public class AdminCLI {
             System.out.print(" choose an option: ");
             String c = scanner.nextLine().trim();
             switch (c) {
-                case "1": usersMenu(); break;
-                case "2": playlistsMenu(); break;
-                case "3": songsMenu(); break;
-                case "4": reportsMenu(); break;
-                case "5": saveAll(); break;
-                case "0": return;
-                default: System.out.println("invalid option");
+                case "1":
+                    usersMenu();
+                    break;
+                case "2":
+                    playlistsMenu();
+                    break;
+                case "3":
+                    songsMenu();
+                    break;
+                case "4":
+                    reportsMenu();
+                    break;
+                case "5":
+                    saveAll();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("invalid option");
             }
         }
     }
 
-    // -------- Users --------
     private void usersMenu() {
         while (true) {
             System.out.println("\n--- user management ---");
@@ -147,13 +155,25 @@ public class AdminCLI {
             System.out.print("choose an option: ");
             String c = scanner.nextLine().trim();
             switch (c) {
-                case "1": listUsers(); break;
-                case "2": showUserProfile(); break;
-                case "3": createUser(); break;
-                case "4": deleteUser(); break;
-                case "5": updateUserFields(); break;
-                case "0": return;
-                default: System.out.println("invalid option");
+                case "1":
+                    listUsers();
+                    break;
+                case "2":
+                    showUserProfile();
+                    break;
+                case "3":
+                    createUser();
+                    break;
+                case "4":
+                    deleteUser();
+                    break;
+                case "5":
+                    updateUserFields();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("invalid option");
             }
         }
     }
@@ -205,7 +225,10 @@ public class AdminCLI {
 
     private void createUser() {
         String u = prompt("new username: ");
-        if (userProfiles.containsKey(u)) { System.out.println("already taken"); return; }
+        if (userProfiles.containsKey(u)) {
+            System.out.println("already taken");
+            return;
+        }
         String email = prompt("emaiel: ");
         String pass = prompt("password: ");
         Map<String, Object> profile = new LinkedHashMap<>();
@@ -234,21 +257,32 @@ public class AdminCLI {
     private void updateUserFields() {
         String u = prompt("username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("user not found"); return; }
+        if (p == null) {
+            System.out.println("user not found");
+            return;
+        }
         System.out.println("options 1)email   2) password  3) theme (light/dark)  0) back");
         String c = prompt("choose ");
         switch (c) {
-            case "1": p.put("email", prompt("new email ")); break;
-            case "2": p.put("password", prompt("new password: ")); break;
-            case "3": p.put("theme", prompt("new theme(light/dark): ")); break;
-            case "0": return;
-            default: System.out.println("invalid option"); return;
+            case "1":
+                p.put("email", prompt("new email "));
+                break;
+            case "2":
+                p.put("password", prompt("new password: "));
+                break;
+            case "3":
+                p.put("theme", prompt("new theme(light/dark): "));
+                break;
+            case "0":
+                return;
+            default:
+                System.out.println("invalid option");
+                return;
         }
         saveUserProfiles();
         System.out.println("updated");
     }
 
-    // -------- Playlists --------
     private void playlistsMenu() {
         while (true) {
             System.out.println("\n--- Playlist Management ---");
@@ -262,14 +296,28 @@ public class AdminCLI {
             System.out.print("Choice: ");
             String c = scanner.nextLine().trim();
             switch (c) {
-                case "1": listUserPlaylists(); break;
-                case "2": createPlaylist(); break;
-                case "3": renamePlaylist(); break;
-                case "4": deletePlaylist(); break;
-                case "5": addSongToPlaylist(); break;
-                case "6": removeSongFromPlaylist(); break;
-                case "0": return;
-                default: System.out.println("Invalid option.");
+                case "1":
+                    listUserPlaylists();
+                    break;
+                case "2":
+                    createPlaylist();
+                    break;
+                case "3":
+                    renamePlaylist();
+                    break;
+                case "4":
+                    deletePlaylist();
+                    break;
+                case "5":
+                    addSongToPlaylist();
+                    break;
+                case "6":
+                    removeSongFromPlaylist();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option.");
             }
         }
     }
@@ -277,23 +325,32 @@ public class AdminCLI {
     private void listUserPlaylists() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         List<Map<String, Object>> pls = getPlaylists(p);
-        if (pls.isEmpty()) { System.out.println("No playlists found."); return; }
+        if (pls.isEmpty()) {
+            System.out.println("No playlists found.");
+            return;
+        }
         System.out.printf("\nPlaylists of %s:\n", u);
         int idx = 1;
         for (Map<String, Object> pl : pls) {
             String name = getPlaylistName(pl);
             String id = str(pl.get("id"));
             List<String> songs = getPlaylistSongs(pl);
-            System.out.printf("%d) %s %s  | %d songs\n", idx++, name, (id==null||id.isEmpty()?"":"["+id+"]"), songs.size());
+            System.out.printf("%d) %s %s  | %d songs\n", idx++, name, (id == null || id.isEmpty() ? "" : "[" + id + "]"), songs.size());
         }
     }
 
     private void createPlaylist() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         String name = prompt("Playlist name: ");
         List<Map<String, Object>> pls = getPlaylists(p);
         for (Map<String, Object> pl : pls) {
@@ -316,9 +373,15 @@ public class AdminCLI {
     private void renamePlaylist() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         List<Map<String, Object>> pls = getPlaylists(p);
-        if (pls.isEmpty()) { System.out.println("No playlists found."); return; }
+        if (pls.isEmpty()) {
+            System.out.println("No playlists found.");
+            return;
+        }
         String target = prompt("Current playlist name or ID: ");
         for (Map<String, Object> pl : pls) {
             if (matchesPlaylist(pl, target)) {
@@ -335,31 +398,51 @@ public class AdminCLI {
     private void deletePlaylist() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         List<Map<String, Object>> pls = getPlaylists(p);
-        if (pls.isEmpty()) { System.out.println("No playlists found."); return; }
+        if (pls.isEmpty()) {
+            System.out.println("No playlists found.");
+            return;
+        }
         String target = prompt("Playlist name or ID to delete: ");
         boolean removed = pls.removeIf(pl -> matchesPlaylist(pl, target));
-        if (removed) { saveUserProfiles(); System.out.println("Playlist deleted."); }
-        else System.out.println("Playlist not found.");
+        if (removed) {
+            saveUserProfiles();
+            System.out.println("Playlist deleted.");
+        } else System.out.println("Playlist not found.");
     }
 
     private void addSongToPlaylist() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         List<Map<String, Object>> pls = getPlaylists(p);
-        if (pls.isEmpty()) { System.out.println("No playlists found."); return; }
+        if (pls.isEmpty()) {
+            System.out.println("No playlists found.");
+            return;
+        }
         String target = prompt("Playlist name or ID: ");
         Map<String, Object> found = findPlaylist(pls, target);
-        if (found == null) { System.out.println("Playlist not found."); return; }
+        if (found == null) {
+            System.out.println("Playlist not found.");
+            return;
+        }
         String songId = prompt("songId (mp3 file name without extension): ");
         if (!songExists(songId)) {
             System.out.println("⚠ Song file not found in folder " + SONGS_FOLDER + " (" + songId + ".mp3)");
         }
         List<String> songs = getPlaylistSongs(found);
         if (!songs.contains(songId)) songs.add(songId);
-        else { System.out.println("This song is already in the playlist."); return; }
+        else {
+            System.out.println("This song is already in the playlist.");
+            return;
+        }
         saveUserProfiles();
         System.out.println("Song added.");
     }
@@ -367,19 +450,29 @@ public class AdminCLI {
     private void removeSongFromPlaylist() {
         String u = prompt("Username: ");
         Map<String, Object> p = userProfiles.get(u);
-        if (p == null) { System.out.println("User not found."); return; }
+        if (p == null) {
+            System.out.println("User not found.");
+            return;
+        }
         List<Map<String, Object>> pls = getPlaylists(p);
-        if (pls.isEmpty()) { System.out.println("No playlists found."); return; }
+        if (pls.isEmpty()) {
+            System.out.println("No playlists found.");
+            return;
+        }
         String target = prompt("Playlist name or ID: ");
         Map<String, Object> found = findPlaylist(pls, target);
-        if (found == null) { System.out.println("Playlist not found."); return; }
+        if (found == null) {
+            System.out.println("Playlist not found.");
+            return;
+        }
         String songId = prompt("songId to remove: ");
         List<String> songs = getPlaylistSongs(found);
-        if (songs.remove(songId)) { saveUserProfiles(); System.out.println("Removed."); }
-        else System.out.println("This song was not in the playlist.");
+        if (songs.remove(songId)) {
+            saveUserProfiles();
+            System.out.println("Removed.");
+        } else System.out.println("This song was not in the playlist.");
     }
 
-    // -------- Songs & Stats --------
     private void songsMenu() {
         while (true) {
             System.out.println("\n--- Songs & Stats Management ---");
@@ -392,13 +485,25 @@ public class AdminCLI {
             System.out.print("Choice: ");
             String c = scanner.nextLine().trim();
             switch (c) {
-                case "1": showTop(songLikes, "Likes"); break;
-                case "2": showTop(songViews, "Views"); break;
-                case "3": setCounter(songLikes, "Likes"); break;
-                case "4": setCounter(songViews, "Views"); break;
-                case "5": searchSongPresence(); break;
-                case "0": return;
-                default: System.out.println("Invalid option.");
+                case "1":
+                    showTop(songLikes, "Likes");
+                    break;
+                case "2":
+                    showTop(songViews, "Views");
+                    break;
+                case "3":
+                    setCounter(songLikes, "Likes");
+                    break;
+                case "4":
+                    setCounter(songViews, "Views");
+                    break;
+                case "5":
+                    searchSongPresence();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option.");
             }
         }
     }
@@ -446,7 +551,6 @@ public class AdminCLI {
                 " | Views: " + songViews.getOrDefault(songId, 0));
     }
 
-    // -------- Reports / Export --------
     private void reportsMenu() {
         while (true) {
             System.out.println("\n--- Reports / Export ---");
@@ -456,10 +560,16 @@ public class AdminCLI {
             System.out.print("Choice: ");
             String c = scanner.nextLine().trim();
             switch (c) {
-                case "1": exportUsersCsv(); break;
-                case "2": exportTopCsv(); break;
-                case "0": return;
-                default: System.out.println("Invalid option.");
+                case "1":
+                    exportUsersCsv();
+                    break;
+                case "2":
+                    exportTopCsv();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Invalid option.");
             }
         }
     }
@@ -492,7 +602,7 @@ public class AdminCLI {
             bw.write("rank,songId,likes,views,file_exists\n");
             // Sort by likes
             List<Map.Entry<String, Integer>> list = new ArrayList<>(songLikes.entrySet());
-            list.sort((a,b)->Integer.compare(b.getValue(), a.getValue()));
+            list.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
             int i = 1;
             for (Map.Entry<String, Integer> e : list) {
                 String id = e.getKey();
@@ -507,17 +617,21 @@ public class AdminCLI {
         }
     }
 
-
-    // ---------------------- Helpers ----------------------
     private String prompt(String msg) {
         System.out.print(msg);
         return scanner.nextLine().trim();
     }
 
-    private String str(Object o) { return o == null ? null : String.valueOf(o); }
+    private String str(Object o) {
+        return o == null ? null : String.valueOf(o);
+    }
 
     private int parseIntSafe(String s, int def) {
-        try { return Integer.parseInt(s.trim()); } catch (Exception e) { return def; }
+        try {
+            return Integer.parseInt(s.trim());
+        } catch (Exception e) {
+            return def;
+        }
     }
 
     private String csv(String s) {
@@ -546,12 +660,12 @@ public class AdminCLI {
     private boolean matchesPlaylist(Map<String, Object> pl, String token) {
         String id = str(pl.get("id"));
         String name = getPlaylistName(pl);
-        return token.equalsIgnoreCase(id == null? "" : id) || token.equalsIgnoreCase(name == null? "" : name);
+        return token.equalsIgnoreCase(id == null ? "" : id) || token.equalsIgnoreCase(name == null ? "" : name);
     }
 
     private String getPlaylistName(Map<String, Object> pl) {
         Object name = pl.get("name");
-        if (name == null) name = pl.get("playlistName"); // سازگاری با کد سرور
+        if (name == null) name = pl.get("playlistName");
         return name == null ? null : String.valueOf(name);
     }
 
@@ -561,7 +675,6 @@ public class AdminCLI {
         if (pl.containsKey("playlistName")) pl.put("playlistName", newName);
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> getPlaylistSongs(Map<String, Object> pl) {
         Object s = pl.get("songs");
         if (s instanceof List) {
@@ -577,7 +690,6 @@ public class AdminCLI {
         return empty;
     }
 
-    @SuppressWarnings("unchecked")
     private List<String> getStringList(Object o) {
         if (o instanceof List) {
             List<?> raw = (List<?>) o;
