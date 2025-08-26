@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/musicplayer.iml" filepath="$PROJECT_DIR$/musicplayer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rega.iml" filepath="$PROJECT_DIR$/rega.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/rega_android.iml" filepath="$PROJECT_DIR$/android/rega_android.iml" />
     </modules>
   </component>
 </project>

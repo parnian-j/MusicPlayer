@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // اضافه شده
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/song.dart';
 
 class SongPlayerPage extends StatefulWidget {
@@ -57,7 +57,7 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
 
   Future<void> _sendTcpCommand(String action, String payload) async {
     try {
-      Socket socket = await Socket.connect("192.168.251.134", 12344);
+      Socket socket = await Socket.connect("192.168.219.134", 12344);
       final req = {
         "action": action,
         "payloadJson": jsonEncode(payload),
@@ -132,7 +132,6 @@ class _SongPlayerPageState extends State<SongPlayerPage> {
       });
     }
 
-    // بعد از تغییر لایک‌ها ذخیره‌شون کن
     _saveLikedSongsToPrefs();
   }
 

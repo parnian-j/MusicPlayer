@@ -1,9 +1,7 @@
-// ==================== LOGIN PAGE ====================
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:local_auth/local_auth.dart';
-
 import 'main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      Socket socket = await Socket.connect('192.168.251.134', 12344, timeout: Duration(seconds: 5));
+      Socket socket = await Socket.connect('192.168.219.134', 12344, timeout: Duration(seconds: 5));
       print('Connected to server');
 
       final request = jsonEncode({
@@ -49,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
             SnackBar(content: Text('Login successful')),
           );
           Future.delayed(Duration(milliseconds: 500), () {
-            // --------- ارسال اطلاعات به MainPage ----------
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(

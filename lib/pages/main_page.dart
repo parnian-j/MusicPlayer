@@ -23,10 +23,8 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   late bool _isDarkMode;
 
-  // ⬇️ کلید برای دسترسی به State هوم
-  final GlobalKey<HomePageState> _homeKey = GlobalKey<HomePageState>(); // ← این
+  final GlobalKey<HomePageState> _homeKey = GlobalKey<HomePageState>();
 
-  // ⬇️ صفحات را یک‌بار می‌سازیم
   late final List<Widget> _pages;
 
   @override
@@ -36,11 +34,11 @@ class _MainPageState extends State<MainPage> {
 
     _pages = [
       HomePage(
-        key: _homeKey, // بسیار مهم: کلید را به HomePage بده
-        socketUrl: 'ws://192.168.251.134:12345',
+        key: _homeKey,
+        socketUrl: 'ws://192.168.219.134:12345',
         username: widget.username,
       ),
-      ExplorePage(socketUrl: 'ws://192.168.251.134:12345'),
+      ExplorePage(socketUrl: 'ws://192.168.219.134:12345'),
       ProfilePage(
         username: widget.username,
         isDarkMode: _isDarkMode,
@@ -52,6 +50,10 @@ class _MainPageState extends State<MainPage> {
         },
       ),
     ];
+    //check
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _homeKey.currentState?.forceRefresh();
+    });
   }
 
   void _onItemTapped(int index) {
@@ -59,7 +61,6 @@ class _MainPageState extends State<MainPage> {
       _selectedIndex = index;
     });
 
-    // ⬇️ هر بار تب Home انتخاب شد، از بک‌اند رفرش کن
     if (index == 0) {
       _homeKey.currentState?.forceRefresh();
     }
@@ -74,7 +75,6 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       backgroundColor: _bgColor,
 
-      // ⬇️ IndexedStack وضعیت صفحات را نگه می‌دارد
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,

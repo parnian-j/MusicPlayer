@@ -58,7 +58,6 @@ class _ExplorePageState extends State<ExplorePage> {
       }
     });
   }
-
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -90,7 +89,6 @@ class _ExplorePageState extends State<ExplorePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // بخش Top 10 Popular Songs
             _buildSectionTitle('Top 10 Popular Songs'),
             SizedBox(
               height: 130,
@@ -102,7 +100,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     id: 'popular_$i',
                     name: popularSongs[i].title,
                     songs: [popularSongs[i]],
-                    coverImageUrl: 'assets/images/popular.jpg',
+                    coverImageUrl: 'assets/images/popular.png',
                   ),
                   isSmall: true,
                   onTap: () {
@@ -120,7 +118,6 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
 
-            // بخش Top 10 Most Viewed Songs
             _buildSectionTitle('Top 10 Most Viewed Songs'),
             SizedBox(
               height: 130,
@@ -132,7 +129,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     id: 'mostviewed_$i',
                     name: mostViewedSongs[i].title,
                     songs: [mostViewedSongs[i]],
-                    coverImageUrl: 'assets/images/viewed.jpg',
+                    coverImageUrl: 'assets/images/view.png',
                   ),
                   isSmall: true,
                   onTap: () {
@@ -150,7 +147,6 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ),
 
-            // بخش All Songs (به جای Genre)
             _buildSectionTitle('All Songs'),
             ListView.builder(
               shrinkWrap: true,

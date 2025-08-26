@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Clipboard
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../models/playlist.dart';
 import '../models/song.dart';
 
@@ -33,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
   late bool isDarkMode;
   Uint8List? profileImageBytes;
 
-  // برای پیست‌کردن JSON پلی‌لیست
   final TextEditingController _playlistPasteCtrl = TextEditingController();
   bool _importing = false;
 
@@ -44,35 +43,72 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadProfile();
   }
 
-  // لود اولیه‌ی پروفایل (در صورت داشتن ذخیره‌ی محلی؛ در غیر این صورت می‌تونی با سرور سینک کنی)
   Future<void> _loadProfile() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      email = prefs.getString('profile_email') ?? '';
-      password = prefs.getString('profile_password') ?? '';
-      final bytesB64 = prefs.getString('profile_image_b64');
-      if (bytesB64 != null && bytesB64.isNotEmpty) {
-        profileImageBytes = base64Decode(bytesB64);
-      }
-      if (mounted) setState(() {});
-    } catch (_) {}
+    final prefs = await SharedPreferences.getInstance();
+    email = prefs.getString('profile_email') ?? '';
+    password = prefs.getString('profile_password') ?? '';
+    final bytesB64 = prefs.getString('profile_image_b64');
+    if (bytesB64 != null && bytesB64.isNotEmpty) {
+      profileImageBytes = base64Decode(bytesB64);
+    }
+    setState(() {});
   }
 
-  // ذخیره‌ی پروفایل فعلی (لوکال؛ در صورت نیاز جایگزین با HTTP/WebSocket)
+  Future<String> _updateProfileOnServer({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    final socket = await Socket.connect("192.168.219.134", 12344,
+        timeout: const Duration(seconds: 5));
+
+    final payload = {'username': username, 'email': email, 'password': password};
+    final request = {
+      'action': 'update_profile',
+      'payloadJson': jsonEncode(payload),
+    };
+
+    socket.writeln(jsonEncode(request));
+    await socket.flush();
+
+    final responseLine = await socket
+        .transform(utf8.decoder as StreamTransformer<Uint8List, dynamic>)
+        .transform(const LineSplitter())
+        .first;
+
+    await socket.close();
+    return responseLine;
+  }
+
   Future<void> _updateProfile() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('profile_email', email);
-      await prefs.setString('profile_password', password);
-      if (profileImageBytes != null) {
-        await prefs.setString('profile_image_b64', base64Encode(profileImageBytes!));
-      }
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Profile saved')),
+      final resp = await _updateProfileOnServer(
+        username: widget.username,
+        email: email,
+        password: password,
       );
+
+      if (resp.contains('profile updated')) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('profile_email', email);
+        await prefs.setString('profile_password', password);
+
+        if (profileImageBytes != null) {
+          await prefs.setString(
+            'profile_image_b64',
+            base64Encode(profileImageBytes!),
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated on server')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Update failed: $resp')),
+        );
+      }
     } catch (e) {
-      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Save failed: $e')),
       );
@@ -88,22 +124,17 @@ class _ProfilePageState extends State<ProfilePage> {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final bytes = await image.readAsBytes();
-      if (!mounted) return;
       setState(() => profileImageBytes = bytes);
     }
   }
-
-  // -----------------------------
-  // Import Playlist from pasted JSON
-  // -----------------------------
 
   Future<void> _pasteFromClipboard() async {
     final data = await Clipboard.getData(Clipboard.kTextPlain);
     final text = data?.text ?? '';
     if (text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Clipboard is empty')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Clipboard is empty')));
       return;
     }
     setState(() {
@@ -121,7 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
     setState(() => _importing = true);
     try {
-      // 1) Parse JSON (همون کد قبلی)
       final raw = _playlistPasteCtrl.text.trim();
       dynamic decoded = jsonDecode(raw);
       if (decoded is Map && decoded['payloadJson'] != null) {
@@ -138,19 +168,29 @@ class _ProfilePageState extends State<ProfilePage> {
         throw Exception('Playlist must contain "name" and "songs":[...]');
       }
 
-      final List<Song> songs = songsRaw.map<Song>((e) {
-        final m = (e is Map) ? Map<String, dynamic>.from(e as Map) : <String, dynamic>{};
+      final List<Song> songs =
+      songsRaw.map<Song>((e) {
+        final m =
+        (e is Map)
+            ? Map<String, dynamic>.from(e as Map)
+            : <String, dynamic>{};
         return Song.fromJson(m);
       }).toList();
 
-      // 2) Save to SharedPreferences (بدون عکس کاور)
-      final String baseId = (decoded['id'] ?? DateTime.now().millisecondsSinceEpoch.toString()).toString();
+      final String baseId =
+      (decoded['id'] ?? DateTime.now().millisecondsSinceEpoch.toString())
+          .toString();
       final prefs = await SharedPreferences.getInstance();
       final stored = prefs.getString('playlists');
       List<Playlist> current = [];
       if (stored != null) {
         final arr = jsonDecode(stored) as List;
-        current = arr.map<Playlist>((e) => Playlist.fromJson(Map<String, dynamic>.from(e))).toList();
+        current =
+            arr
+                .map<Playlist>(
+                  (e) => Playlist.fromJson(Map<String, dynamic>.from(e)),
+            )
+                .toList();
       }
 
       String uniqueId = baseId;
@@ -162,23 +202,20 @@ class _ProfilePageState extends State<ProfilePage> {
         id: uniqueId,
         name: name,
         songs: songs,
-        coverImageUrl: '', // عمداً خالی تا هیچ Asset لود نشه
+        coverImageUrl: '',
       );
 
       current.add(playlist);
-      await prefs.setString('playlists', jsonEncode(current.map((p) => p.toJson()).toList()));
-
-      if (!mounted) return;
-
-      // 3) کیبورد رو ببند، بعد از فریم فعلی ناوبری کن
-      FocusScope.of(context).unfocus();
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Playlist imported')),
+      await prefs.setString(
+        'playlists',
+        jsonEncode(current.map((p) => p.toJson()).toList()),
       );
 
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Playlist imported')));
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/main',
@@ -187,19 +224,14 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       });
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Import failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Import failed: $e')));
     } finally {
-      if (mounted) setState(() => _importing = false);
+      setState(() => _importing = false);
     }
   }
 
-
-  // -----------------------------
-  // UI
-  // -----------------------------
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -213,70 +245,91 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: _logout,
             tooltip: 'Logout',
           ),
+          IconButton(
+            icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+            onPressed: () {
+              setState(() => isDarkMode = !isDarkMode);
+              widget.onThemeChanged?.call(isDarkMode);
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // تصویر پروفایل — بدون AssetImage پیش‌فرض، تا هرگز ارور نده
             GestureDetector(
               onTap: _pickImage,
               child: CircleAvatar(
                 radius: 80,
-                backgroundColor: Colors.grey[800],
+                backgroundColor:
+                isDarkMode ? Colors.grey[800] : Colors.grey[300],
                 backgroundImage:
-                profileImageBytes != null ? MemoryImage(profileImageBytes!) : null,
-                child: profileImageBytes == null
-                    ? const Icon(Icons.person, size: 64, color: Colors.white70)
+                profileImageBytes != null
+                    ? MemoryImage(profileImageBytes!)
+                    : null,
+                child:
+                profileImageBytes == null
+                    ? Icon(
+                  Icons.person,
+                  size: 64,
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                )
                     : null,
               ),
             ),
             const SizedBox(height: 20),
 
-            // نمایش Username و Email (فقط نمایش)
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.person),
-                title: const Text('Username'),
-                subtitle: Text(widget.username),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.email),
-                title: const Text('Email'),
-                subtitle: Text(email.isNotEmpty ? email : '—'),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // سوییچ تم
-            SwitchListTile(
-              title: const Text('Dark Mode'),
-              value: isDarkMode,
-              onChanged: (val) {
-                setState(() => isDarkMode = val);
-                widget.onThemeChanged?.call(val);
-              },
-            ),
-            const SizedBox(height: 12),
-
-            // دکمه ذخیره پروفایل
             Form(
               key: _formKey,
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _updateProfile,
-                  child: const Text('Save Changes'),
-                ),
+              child: Column(
+                children: [
+                  TextFormField(
+                    initialValue: email,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'Enter email';
+                      if (!val.contains('@')) return 'Enter valid email';
+                      return null;
+                    },
+                    onChanged: (val) => email = val,
+                  ),
+                  const SizedBox(height: 12),
+                  TextFormField(
+                    initialValue: password,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    obscureText: true,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'Enter password';
+                      if (val.length < 4) return 'Password too short';
+                      return null;
+                    },
+                    onChanged: (val) => password = val,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          _updateProfile();
+                        }
+                      },
+                      child: const Text('Save Changes'),
+                    ),
+                  ),
+                ],
               ),
             ),
+
             const SizedBox(height: 24),
 
-            // بخش Import Playlist از JSON
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -288,19 +341,23 @@ class _ProfilePageState extends State<ProfilePage> {
             TextField(
               controller: _playlistPasteCtrl,
               maxLines: 8,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black87,
+              ),
               decoration: InputDecoration(
                 hintText: 'Paste playlist JSON here...',
-                hintStyle: const TextStyle(color: Colors.white70),
+                hintStyle: TextStyle(
+                  color: isDarkMode ? Colors.white70 : Colors.black45,
+                ),
                 filled: true,
-                fillColor: Colors.grey[900],
+                fillColor: isDarkMode ? Colors.grey[900] : Colors.grey[200],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.paste),
-                  color: Colors.cyanAccent,
+                  color: Colors.cyan,
                   onPressed: _pasteFromClipboard,
                   tooltip: 'Paste from clipboard',
                 ),
@@ -321,10 +378,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-
             const SizedBox(height: 24),
 
-            // حذف اکانت (رفتار قبلی)
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -332,15 +387,56 @@ class _ProfilePageState extends State<ProfilePage> {
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
                 ),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/login');
+                onPressed: () async {
+                  try {
+                    final socket = await Socket.connect("192.168.219.134", 12344,
+                        timeout: const Duration(seconds: 5));
+
+                    final request = {
+                      "action": "delete_account",
+                      "payloadJson": widget.username,
+                    };
+
+                    socket.writeln(jsonEncode(request));
+                    await socket.flush();
+
+                    final responseLine = await socket
+                        .cast<List<int>>()
+                        .transform(utf8.decoder)
+                        .transform(const LineSplitter())
+                        .first;
+
+                    await socket.close();
+
+                    if (responseLine.trim() == "success") {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      if (!mounted) return;
+                      Navigator.pushReplacementNamed(context, '/login');
+                    } else {
+                      if (!mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Delete failed: $responseLine")),
+                      );
+                    }
+                  } catch (e) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error deleting account: $e")),
+                    );
+                  }
                 },
+
+
                 child: const Text('Delete Account'),
               ),
             ),
+
           ],
         ),
       ),
     );
   }
 }
+
+

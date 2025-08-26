@@ -1,7 +1,6 @@
-// lib/pages/playlist_detail_page.dart
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // ⬅️ برای Clipboard
+import 'package:flutter/services.dart';
 import '../models/playlist.dart';
 import '../models/song.dart';
 import 'song_player_page.dart';
@@ -29,15 +28,12 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
     playlist = widget.playlist;
   }
 
-  // ⬇️ دکمه‌ی Share: کپی JSON پلی‌لیست به کلیپ‌بورد
   Future<void> _copyPlaylistJson() async {
-    // اگر مدل‌ها toJson دارن، ازشون استفاده کن:
     Map<String, dynamic> plMap = {
       'id': playlist.id,
       'name': playlist.name,
       'coverImageUrl': playlist.coverImageUrl,
       'songs': playlist.songs.map((s) {
-        // اگر Song.toJson داری، این خط ساده‌تر میشه: return s.toJson();
         return {
           'id': s.id,
           'title': s.title,
@@ -50,7 +46,6 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
       }).toList(),
     };
 
-    // خوش‌فرم (pretty) برای کپی
     final jsonStr = const JsonEncoder.withIndent('  ').convert(plMap);
 
     await Clipboard.setData(ClipboardData(text: jsonStr));
@@ -116,7 +111,7 @@ class _PlaylistDetailPageState extends State<PlaylistDetailPage> {
           IconButton(
             icon: const Icon(Icons.share, color: Colors.black),
             tooltip: 'Share (copy JSON)',
-            onPressed: _copyPlaylistJson, // ⬅️ اینجا
+            onPressed: _copyPlaylistJson,
           ),
           IconButton(
             icon: const Icon(Icons.add, color: Colors.black),

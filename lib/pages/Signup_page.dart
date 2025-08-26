@@ -23,7 +23,7 @@ class _SignupPageState extends State<SignupPage> {
     });
 
     try {
-      final socket = await Socket.connect('192.168.251.134', 12344);
+      final socket = await Socket.connect('192.168.219.134', 12344);
 
       final payload = {
         'username': username.trim(),
@@ -46,7 +46,6 @@ class _SignupPageState extends State<SignupPage> {
         );
 
         if (response.toLowerCase().contains("success")) {
-          // --------- انتقال به MainPage همراه با اطلاعات کاربر ----------
           Future.delayed(Duration(milliseconds: 500), () {
             Navigator.pushReplacement(
               context,
